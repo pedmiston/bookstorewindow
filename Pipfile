@@ -9,12 +9,12 @@ pip = "==18.0"
 django-crispy-forms = "*"
 
 [dev-packages]
+ansible = "*"
 pytest = "*"
 selenium = "*"
-black = "*"
 
 [requires]
-python_version = "3.6"
+python_version = "3.5"
 
 [pipenv]
 allow_prereleases = true

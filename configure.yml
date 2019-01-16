@@ -1,0 +1,28 @@
+---
+- hosts: all
+  become: yes
+  vars:
+    - app_dir: /apps/bookstorewindow
+  tasks:
+    - name: Update the system-wide packages
+      apt:
+        update_cache: yes
+        upgrade: yes
+
+    - name: Install the pip python package manager
+      apt:
+        name: python3-pip
+
+    # The VM only syncs the Django app subdir.
+    # See the "config.vm.synced_folder" setting in Vagrantfile
+    # This task copies the project Pipfile to use as the
+    # requirements for running Django.
+    - name: Copy the python requirements to the host
+      copy:
+        src: Pipfile
+        dest: "{{ app_dir }}/Pipfile"
+
+    - name: Install the requirements
+      pip:
+        requirements: requirements.txt
+        virtualenv: "{{ app_dir }}/venv"

@@ -1,2 +1,4 @@
+*.retry
+.vagrant/
 *.sqlite3
 geckodriver.log

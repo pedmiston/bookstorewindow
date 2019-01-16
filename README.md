@@ -23,8 +23,14 @@ pipenv install --python=3.6.6 --dev
 ## Running the app on a local server
 
 ```bash
-cd bookstorewindow
-pipenv run ./manage.py runserver
+# Use the django server to run locally
+pipenv run bookstorewindow/manage.py runserver
+```
+
+## Running the app on a virtual machine
+
+```bash
+vagrant up
 ```
 
 ## Testing
