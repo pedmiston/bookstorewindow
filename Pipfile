@@ -6,6 +6,7 @@ name = "pypi"
 [packages]
 django = "*"
 pip = "==18.0"
+django-crispy-forms = "*"
 
 [dev-packages]
 pytest = "*"
