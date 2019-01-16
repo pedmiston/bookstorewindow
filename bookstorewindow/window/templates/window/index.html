@@ -1,2 +1,6 @@
 {% load crispy_forms_tags %}
 {% crispy form %}
+
+{% if query %}
+<h1>{{ query }}</h1>
+{% endif %}
