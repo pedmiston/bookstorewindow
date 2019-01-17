@@ -7,11 +7,13 @@ name = "pypi"
 django = "*"
 pip = "==18.0"
 django-crispy-forms = "*"
+"jinja2" = "*"
 
 [dev-packages]
 pytest = "*"
 selenium = "*"
 black = "*"
+ansible = "*"
 
 [requires]
 python_version = "3.6"

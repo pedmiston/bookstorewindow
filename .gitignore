@@ -1,2 +1,4 @@
+.env
+.vagrant/
 *.sqlite3
 geckodriver.log
