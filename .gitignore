@@ -1,4 +1,5 @@
 .env
+**/fixtures/cassettes/
 .vagrant/
 *.sqlite3
 geckodriver.log

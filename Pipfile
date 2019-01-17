@@ -14,6 +14,8 @@ pytest = "*"
 selenium = "*"
 black = "*"
 ansible = "*"
+ansible-vault = "*"
+betamax = "*"
 
 [requires]
 python_version = "3.6"

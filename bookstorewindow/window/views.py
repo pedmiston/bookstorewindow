@@ -18,6 +18,10 @@ class WindowView(View):
         if form.is_valid():
             query = form.cleaned_data["query"]
             books = Book.objects.search(query)
-            return render(request, self.template_name, {"form": form, "query": query, "books": books})
+            return render(
+                request,
+                self.template_name,
+                {"form": form, "query": query, "books": books},
+            )
 
         return render(request, self.template_name, {"form": form})

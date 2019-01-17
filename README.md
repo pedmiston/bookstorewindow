@@ -45,6 +45,7 @@ web driver to simulate user behavior.
 
 ```
 pipenv run ./manage.py test
+pipenv run ./manage.py test window  # run unit tests only
 ```
 
 ## Using the Google Books API

@@ -1,0 +1,30 @@
+from django.test import TestCase
+from betamax import Betamax
+from requests import Session
+
+
+from window import google_books_api
+from window.models import Book
+
+
+with Betamax.configure() as config:
+    config.cassette_library_dir = "window/tests/fixtures/cassettes"
+
+
+class GoogleAPITest(TestCase):
+    def setUp(self):
+        self.session = Session()
+
+    def test_searching_for_a_book_returns_a_list_of_dicts(self):
+        query = "The Bible"
+        with Betamax(self.session) as vcr:
+            vcr.use_cassette(query)
+            results = google_books_api.search(query, session=self.session)
+            self.assertTrue(len(results) > 0)
+
+    def test_create_book_instances_from_book_data(self):
+        query = "The Bible"
+        with Betamax(self.session) as vcr:
+            vcr.use_cassette(query)
+            books = Book.objects.search(query, session=self.session)
+            self.assertTrue(all(book.title != "" for book in books))
