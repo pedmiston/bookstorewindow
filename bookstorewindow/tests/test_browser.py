@@ -8,6 +8,9 @@ class BrowserTest(StaticLiveServerTestCase):
         super().setUpClass()
         cls.browser = webdriver.Firefox()
 
+        # Configure webdriver to wait for page reloads
+        cls.browser.implicitly_wait(5)
+
     @classmethod
     def tearDownClass(cls):
         cls.browser.quit()
@@ -25,4 +28,4 @@ class BrowserTest(StaticLiveServerTestCase):
         search.submit()
 
         results = self.browser.find_elements_by_tag_name("li")
-        assert len(results) > 0
+        self.assertTrue(len(results) > 0)

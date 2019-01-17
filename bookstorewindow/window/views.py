@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.views import View
 
 from .forms import SearchForm
+from .models import Book
 
 
 class WindowView(View):
@@ -16,6 +17,7 @@ class WindowView(View):
         form = self.form_class(request.POST)
         if form.is_valid():
             query = form.cleaned_data["query"]
-            return render(request, self.template_name, {"form": form, "query": query})
+            books = Book.objects.search(query)
+            return render(request, self.template_name, {"form": form, "query": query, "books": books})
 
         return render(request, self.template_name, {"form": form})
