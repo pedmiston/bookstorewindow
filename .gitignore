@@ -1,4 +1,6 @@
-*.retry
+.env
+**/fixtures/cassettes/
 .vagrant/
+*.retry
 *.sqlite3
 geckodriver.log

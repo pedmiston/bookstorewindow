@@ -1,2 +1,17 @@
 {% load crispy_forms_tags %}
 {% crispy form %}
+
+{% if query %}
+<h1>{{ query }}</h1>
+{% endif %}
+
+{% if books %}
+<ul>
+{% for book in books %}
+<li>
+  <img src="{{ book.image }}">
+  {{ book.title }} by {{ book.authors }}
+</li>
+{% endfor %}
+</ul>
+{% endif %}
