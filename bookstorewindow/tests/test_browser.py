@@ -38,5 +38,5 @@ class BrowserTest(StaticLiveServerTestCase):
         search.submit()
 
         result = self.browser.find_elements_by_tag_name("li")[0]
-        link = result.find_element_by_class("data-source")
-        self.assertIn("books.google.com/books?id=FmyBAwAAQBAJ", link.get_attribute("src", ""))
+        link = result.find_element_by_class_name("google-book-page").get_attribute("href", "")
+        self.assertIn("books.google.com/books?id=", link)
