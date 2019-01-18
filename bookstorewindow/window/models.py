@@ -14,6 +14,7 @@ class BookManager(models.Manager):
 
 
 class Book(models.Model):
+    id = models.CharField(max_length=100, primary_key=True)
     title = models.CharField(max_length=100)
     authors = models.CharField(max_length=100)
     image = models.URLField(null=True, blank=True)
@@ -36,6 +37,7 @@ class Book(models.Model):
             image = None
 
         return cls(
+            id=volume["id"],
             title=volume["volumeInfo"]["title"],
             authors=" & ".join(volume["volumeInfo"]["authors"]),
             image=image,

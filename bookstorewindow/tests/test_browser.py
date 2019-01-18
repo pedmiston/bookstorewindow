@@ -1,3 +1,5 @@
+import os
+
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium import webdriver
 
@@ -29,3 +31,12 @@ class BrowserTest(StaticLiveServerTestCase):
 
         results = self.browser.find_elements_by_tag_name("li")
         self.assertTrue(len(results) > 0)
+
+    def test_user_can_click_on_a_link_to_learn_more_about_the_book(self):
+        search = self.browser.find_element_by_id("id_query")
+        search.send_keys("Sapiens: A Brief History of Humankind")
+        search.submit()
+
+        result = self.browser.find_elements_by_tag_name("li")[0]
+        link = result.find_element_by_class("data-source")
+        self.assertIn("books.google.com/books?id=FmyBAwAAQBAJ", link.get_attribute("src", ""))

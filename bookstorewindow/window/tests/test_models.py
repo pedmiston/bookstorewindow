@@ -11,10 +11,10 @@ class ModelTest(TestCase):
         self.assertTrue(len(results) > 0)
         self.assertIsInstance(results[0], Book)
 
-    def test_book_requires_a_title_and_an_author(self):
+    def test_required_data_for_books(self):
         book = Book()
         with self.assertRaises(ValidationError):
             book.full_clean()
 
-        book = Book(title="The Bible", authors="Paul")
+        book = Book(title="The Bible", authors="Paul", id="123")
         book.full_clean()  # does not raise
