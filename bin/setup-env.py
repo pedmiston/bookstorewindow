@@ -5,8 +5,8 @@ from ansible_vault import Vault
 
 template = jinja2.Template(
     """\
-ANSIBLE_VAULT_PASSWORD_FILE={{ ansible_vault_password_file }}
-GOOGLE_API_KEY={{ google_api_key }}
+export ANSIBLE_VAULT_PASSWORD_FILE={{ ansible_vault_password_file }}
+export GOOGLE_API_KEY={{ google_api_key }}
 """
 )
 

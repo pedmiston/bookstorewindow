@@ -10,18 +10,19 @@ manager.
 
 ```bash
 # Install required programs
-brew install pyenv pipenv
+brew install pyenv
 
 # Activate pyenv to pin specific versions of python
 eval "$(pyenv init -)"
 
 # Install the required python packages in a virtual environment
-# The required python packages are listed in the Pipfile
-pipenv install --dev
+# The required python packages are listed in the requirements file.
+python -m venv /path/to/venvs/bookstore-window
+source activate /path/to/venvs/bookstore-window/bin/activate
+pip install -r requirements.txt
 
 # Creates an environment file from a template named ".env"
-# pipenv will load the ".env" file when the venv is activated.
-pipenv run bin/setup-env.py
+python bin/setup-env.py
 ```
 
 ## Environment vars
@@ -42,6 +43,10 @@ pipenv run bookstorewindow/manage.py runserver
 
 ```bash
 vagrant up
+vagrant ssh
+cd /apps/bookstorewindow
+source venv/bin/activate
+./manage.py runserver 0.0.0.0:8000
 ```
 
 ## Testing

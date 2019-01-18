@@ -3,6 +3,9 @@
   become: yes
   vars:
     - app_dir: /apps/bookstorewindow
+    - venv_dir: /apps/bookstorewindow/venv
+  vars_files:
+    - vars/secrets.yml
   tasks:
     - name: Update the system-wide packages
       apt:
@@ -13,16 +16,13 @@
       apt:
         name: python3-pip
 
-    # The VM only syncs the Django app subdir.
-    # See the "config.vm.synced_folder" setting in Vagrantfile
-    # This task copies the project Pipfile to use as the
-    # requirements for running Django.
-    - name: Copy the python requirements to the host
-      copy:
-        src: Pipfile
-        dest: "{{ app_dir }}/Pipfile"
-
-    - name: Install the requirements
+    - name: Install the python packages required by the app in a virtualenv
       pip:
-        requirements: requirements.txt
-        virtualenv: "{{ app_dir }}/venv"
+        requirements: "{{ app_dir }}/requirements/base.txt"
+        virtualenv: "{{ venv_dir }}"
+
+    - name: Insert the Google API key to the python virtualenv activate script
+      lineinfile:
+        path: "{{ app_dir }}/venv/bin/activate"
+        regexp: '^export GOOGLE_API_KEY='
+        line: 'export GOOGLE_API_KEY={{ google_api_key }}'
