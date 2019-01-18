@@ -15,13 +15,19 @@ class BookManager(models.Manager):
 
 class Book(models.Model):
     title = models.CharField(max_length=100)
+    authors = models.CharField(max_length=100)
     objects = BookManager()
 
     @classmethod
     def from_volume(cls, **volume):
-        """Create a Book instance from the data provided by the Google API."""
+        """Create a Book instance from the data provided by the Google API.
+
+        Book data returned by the Google Books API is described here:
+        https://developers.google.com/books/docs/v1/reference/volumes#resource
+        """
 
         # Smells!
         return cls(
-            title=volume["volumeInfo"]["title"]
+            title=volume["volumeInfo"]["title"],
+            authors=" & ".join(volume["volumeInfo"]["authors"]),
         )

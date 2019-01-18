@@ -8,7 +8,7 @@
 {% if books %}
 <ul>
 {% for book in books %}
-<li>{{ book.title }}</li>
+<li>{{ book.title }} by {{ book.authors }}</li>
 {% endfor %}
 </ul>
 {% endif %}
