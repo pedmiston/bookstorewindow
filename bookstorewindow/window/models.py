@@ -16,6 +16,7 @@ class BookManager(models.Manager):
 class Book(models.Model):
     title = models.CharField(max_length=100)
     authors = models.CharField(max_length=100)
+    image = models.URLField(null=True, blank=True)
     objects = BookManager()
 
     @classmethod
@@ -27,7 +28,15 @@ class Book(models.Model):
         """
 
         # Smells!
+
+        try:
+            image = volume["volumeInfo"]["imageLinks"]["thumbnail"]
+        except KeyError:
+            # image = "https://books.google.com/googlebooks/images/no_cover_thumb.gif"
+            image = None
+
         return cls(
             title=volume["volumeInfo"]["title"],
             authors=" & ".join(volume["volumeInfo"]["authors"]),
+            image=image,
         )

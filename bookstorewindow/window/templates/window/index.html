@@ -8,7 +8,10 @@
 {% if books %}
 <ul>
 {% for book in books %}
-<li>{{ book.title }} by {{ book.authors }}</li>
+<li>
+  <img src="{{ book.image }}">
+  {{ book.title }} by {{ book.authors }}
+</li>
 {% endfor %}
 </ul>
 {% endif %}

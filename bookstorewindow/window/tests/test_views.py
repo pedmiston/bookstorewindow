@@ -14,3 +14,9 @@ class ViewTest(TestCase):
         response = self.client.post("/", {"query": query})
         html = response.content.decode("utf8")
         self.assertIn(author, html)
+
+    def test_book_image_is_included_in_the_response(self):
+        query = "The Plague"
+        response = self.client.post("/", {"query": query})
+        html = response.content.decode("utf8")
+        self.assertIn("<img", html)
