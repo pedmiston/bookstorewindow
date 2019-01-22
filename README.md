@@ -23,6 +23,9 @@ pip install -r requirements.txt
 
 # Creates an environment file from a template named ".env"
 python bin/setup-env.py
+
+# Export the required environment variables
+source .env
 ```
 
 ## Environment vars
@@ -47,6 +50,31 @@ vagrant ssh
 cd /apps/bookstorewindow
 source venv/bin/activate
 ./manage.py runserver 0.0.0.0:8000
+```
+
+## Running the app on a Digital Ocean Droplet
+
+To browse available Droplet details, use the `doctl` command line tool.
+
+```bash
+brew install doctl
+echo $DIGITALOCEAN_ACCESS_TOKEN
+doctl compute image list-distribution --public  # list public distributions
+doctl compute size list                         # list droplet sizes
+doctl compute ssh-key list                      # list available ssh keys
+```
+
+To create a Droplet for the app, run the following Ansible playbook:
+
+```bash
+ansible-playbook provision.yml
+```
+
+To view the Droplet that was created, use the `doctl` tool:
+
+```
+doctl compute droplet list                      # list running droplets
+doctl compute ssh [DROPLET_NAME]                # ssh to running droplet
 ```
 
 ## Testing
