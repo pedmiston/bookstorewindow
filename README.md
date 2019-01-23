@@ -20,11 +20,12 @@ eval "$(pyenv init -)"
 python -m venv /path/to/venvs/bookstore-window
 source activate /path/to/venvs/bookstore-window/bin/activate
 pip install -r requirements.txt
+pip install -r bookstorewindow/requirements/dev.txt
 
 # Creates an environment file from a template named ".env"
 python bin/setup-env.py
 
-# Export the required environment variables
+# Export the required environment variables and activate the venv
 source .env
 ```
 
@@ -34,6 +35,9 @@ There is only one environment variable that needs to be provided in order
 to develop the application.
 
 `ANSIBLE_VAULT_PASSWORD_FILE`: The full path to the password file used to access data encrypted with ansible-vault.
+
+All the other environment variables are extracted from a file encrypted
+using `ansible-vault`.
 
 ## Running the app on a local server
 
@@ -84,14 +88,12 @@ web driver to simulate user behavior.
 
 ```
 pipenv run ./manage.py test
-pipenv run ./manage.py test window  # run unit tests only
+pipenv run ./manage.py test user_tests  # run user tests only
+pipenv run ./manage.py test window      # run unit tests only
 ```
 
 ## Using the Google Books API
 
-### Obtain an API key
-
-Obtaining public data from the Google Books API requires an API key,
-which was created via the Google Developer Console. The key for this
-project is stored in a yaml file that was encrypted using the
-ansible-vault tool.
+Using the Google Books API requires requires an API key, which was created via
+the Google Developer Console. The key for this project is stored in a yaml file
+that was encrypted using the `ansible-vault` tool.

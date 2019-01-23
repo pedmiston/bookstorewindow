@@ -38,6 +38,6 @@ class BrowserTest(StaticLiveServerTestCase):
         search.submit()
 
         result = self.browser.find_elements_by_tag_name("li")[0]
-        link = result.find_element_by_class_name("google-book-page")
+        link = result.find_elements_by_class_name("google-book-page")[0]
         link.click()
         self.assertIn("books.google.com/books?id=FmyBAwAAQBAJ", self.browser.current_url)

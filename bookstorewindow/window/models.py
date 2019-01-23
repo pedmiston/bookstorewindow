@@ -2,6 +2,7 @@ import logging
 import json
 
 from django.db import models
+from django.core.exceptions import ValidationError
 
 from . import google_books_api
 
@@ -24,6 +25,11 @@ def create_books_from_volume_data(volume_data):
         except BookCreationError as err:
             logger.error(err)
             continue
+
+        try:
+            book.full_clean()
+        except ValidationError as err:
+            book = Book.objects.get(title=book.title, authors=book.authors)
         else:
             book.save()
 
@@ -40,6 +46,9 @@ class Book(models.Model):
     title = models.CharField(max_length=100)
     authors = models.CharField(max_length=100)
     image = models.URLField(blank=True)
+
+    class Meta:
+        unique_together = ("title", "authors")
 
     @classmethod
     def from_volume_data(cls, volume):
