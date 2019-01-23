@@ -2,7 +2,8 @@ from django.shortcuts import render
 from django.views import View
 
 from .forms import SearchForm
-from .models import Book
+from .models import Book, create_books_from_volume_data
+from .google_books_api import search_volumes
 
 
 class WindowView(View):
@@ -17,7 +18,8 @@ class WindowView(View):
         form = self.form_class(request.POST)
         if form.is_valid():
             query = form.cleaned_data["query"]
-            books = Book.objects.search(query)
+            volume_data = search_volumes(query)
+            books = create_books_from_volume_data(volume_data)
             return render(
                 request,
                 self.template_name,

@@ -5,7 +5,7 @@ from requests import Session
 
 
 from window import google_books_api
-from window.models import Book
+from window.models import Book, create_books_from_volume_data
 
 
 with Betamax.configure() as config:
@@ -24,26 +24,29 @@ class GoogleAPITest(TestCase):
     def test_searching_for_a_book_returns_a_list_of_dicts(self):
         query = "The Bible"
         self.vcr.use_cassette(slugify(query))
-        results = google_books_api.search(query, session=self.session)
+        results = google_books_api.search_volumes(query, session=self.session)
         self.assertTrue(len(results) > 0)
 
     def test_create_book_instances_from_book_data(self):
         query = "The Bible"
         self.vcr.use_cassette(slugify(query))
-        books = Book.objects.search(query, session=self.session)
+        volume_data = google_books_api.search_volumes(query, session=self.session)
+        books = create_books_from_volume_data(volume_data)
         self.assertTrue(all(book.title != "" for book in books))
 
     def test_books_have_authors(self):
         query = "Sapiens: A Brief History of Humankind"
         self.vcr.use_cassette(slugify(query))
-        books = Book.objects.search(query, session=self.session)
+        volume_data = google_books_api.search_volumes(query, session=self.session)
+        books = create_books_from_volume_data(volume_data)
         for book in books:
             if book.title == query:
                 self.assertEqual(book.authors, "Yuval Noah Harari")
 
-    def test_books_have_ids(self):
+    def test_books_have_volumes(self):
         query = "Sapiens: A Brief History of Humankind"
         self.vcr.use_cassette(slugify(query))
-        books = Book.objects.search(query, session=self.session)
+        volume_data = google_books_api.search_volumes(query, session=self.session)
+        books = create_books_from_volume_data(volume_data)
         best_result = books[0]
-        self.assertEquals(best_result.id, "FmyBAwAAQBAJ")
+        self.assertEquals(best_result.volumes.first().google_book_id, "FmyBAwAAQBAJ")

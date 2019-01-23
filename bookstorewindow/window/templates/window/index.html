@@ -11,8 +11,10 @@
 <li>
   <img src="{{ book.image }}" width="128" border="1">
   {{ book.title }} by {{ book.authors }}
-  <a href="https://books.google.com/books?id={{ book.id }}" class="google-book-page">Book page</a>
-  <a href="https://play.google.com/store/books/details?id={{ book.id }}" class="google-store-page">Store page</a>
+  {% for volume in book.volumes.all %}
+  <a href="https://books.google.com/books?id={{ volume.google_book_id }}" class="google-book-page">Book page</a>
+  <a href="https://play.google.com/store/books/details?id={{ volume.google_book_id }}" class="google-store-page">Store page</a>
+  {% endfor %}
 </li>
 {% endfor %}
 </ul>

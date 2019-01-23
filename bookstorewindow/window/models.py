@@ -1,44 +1,91 @@
+import logging
+import json
+
 from django.db import models
 
 from . import google_books_api
 
+logger = logging.getLogger(__name__)
 
-class BookManager(models.Manager):
-    def search(self, query, session=None):
-        """Create a book instance for each result of the query.
 
-        Returns an empty list if no results are found.
-        """
-        book_data = google_books_api.search(query, session=session)
-        return [Book.from_volume(**datum) for datum in book_data]
+def create_books_from_volume_data(volume_data):
+    """Create books out of the results of a query to the Google Books API.
+
+    Some queries return volumes that are for practical purposes
+    identical, even though the Google Books API has indexed them
+    as separate entities. For this reason, books may have one
+    or more volumes associated with them.
+    """
+    books = []
+
+    for volume in volume_data:
+        try:
+            book = Book.from_volume_data(volume)
+        except BookCreationError as err:
+            logger.error(err)
+            continue
+        else:
+            book.save()
+
+        volume = Volume.from_volume_data(volume)
+        book.volumes.add(volume, bulk=False)
+
+        if book not in books:
+            books.append(book)
+
+    return books
 
 
 class Book(models.Model):
-    id = models.CharField(max_length=100, primary_key=True)
     title = models.CharField(max_length=100)
     authors = models.CharField(max_length=100)
     image = models.URLField(blank=True)
-    objects = BookManager()
 
     @classmethod
-    def from_volume(cls, **volume):
-        """Create a Book instance from the data provided by the Google API.
+    def from_volume_data(cls, volume):
+        """Create a Book instance from the data provided by the Google Books API.
 
-        Book data returned by the Google Books API is described here:
+        The volume data returned by the Google Books API is described here:
         https://developers.google.com/books/docs/v1/reference/volumes#resource
         """
 
         # Smells!
 
         try:
+            title = volume["volumeInfo"]["title"]
+            authors = " & ".join(volume["volumeInfo"]["authors"])
+        except KeyError as err:
+            raise BookCreationError(err)
+
+        try:
             image = volume["volumeInfo"]["imageLinks"]["thumbnail"]
         except KeyError:
-            # image = "https://books.google.com/googlebooks/images/no_cover_thumb.gif"
-            image = None
+            image = "https://books.google.com/googlebooks/images/no_cover_thumb.gif"
 
         return cls(
-            id=volume["id"],
-            title=volume["volumeInfo"]["title"],
-            authors=" & ".join(volume["volumeInfo"]["authors"]),
-            image=image
+            title=title,
+            authors=authors,
+            image=image,
         )
+
+class Volume(models.Model):
+    google_book_id = models.CharField(max_length=100, primary_key=True)
+    volume_info = models.TextField()
+    book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name="volumes")
+
+    @classmethod
+    def from_volume_data(cls, volume):
+        """Create a Book instance from the data provided by the Google Books API.
+
+        The volume data returned by the Google Books API is described here:
+        https://developers.google.com/books/docs/v1/reference/volumes#resource
+        """
+        google_book_id = volume["id"]
+        volume_info = json.dumps(volume)
+        return cls(
+            google_book_id=google_book_id,
+            volume_info=volume_info,
+        )
+
+class BookCreationError(Exception):
+    pass
