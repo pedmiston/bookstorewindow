@@ -6,9 +6,12 @@ from ansible_vault import Vault
 
 template = jinja2.Template(
     """\
+#!/usr/bin/env bash
 export ANSIBLE_VAULT_PASSWORD_FILE={{ ansible_vault_password_file }}
 export GOOGLE_API_KEY={{ google_api_key }}
 export DIGITALOCEAN_ACCESS_TOKEN={{ digitalocean_access_token }}
+
+{{ virtualenv_command }}
 """
 )
 
@@ -38,6 +41,10 @@ if __name__ == "__main__":
         )
     except Exception as e:
         raise e
+
+    env_vars["virtualenv_command"] = input(
+        "Enter the command to activate the virtualenv: "
+    )
 
     with open(".env", "w") as dst:
         dst.write(template.render(**env_vars))
