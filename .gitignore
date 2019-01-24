@@ -1,4 +1,5 @@
 .env
+bookstorewindow/logs
 **/fixtures/cassettes/
 .vagrant/
 *.retry

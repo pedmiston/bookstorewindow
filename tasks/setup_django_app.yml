@@ -1,54 +1,20 @@
 ---
 
 - name: Install packages required by the Django app inside virtualenv
-  pip: virtualenv={{ virtualenv_path }} requirements={{ requirements_file }}
+  pip:
+    virtualenv: "{{ venv_dir }}"
+    requirements: "{{ app_dir }}/requirements/base.txt"
 
-- name: Run Django South migrations
+- name: Migrate the database
   django_manage:
+    app_path: "{{ app_dir }}"
     command: migrate
-    app_path: "{{ project_path }}"
-    virtualenv: "{{ virtualenv_path }}"
-    settings: "{{ django_settings_file }}"
-  environment: "{{ django_environment }}"
-  when: run_django_south_migration
-  tags:
-    - django
-    - django_migrate
+    virtualenv: "{{ venv_dir }}"
 
-- name: Add key for nodejs repo
-  apt_key: url=https://deb.nodesource.com/gpgkey/nodesource.gpg.key state=present
-
-- name: Add nodejs repo
-  apt_repository: repo='deb https://deb.nodesource.com/{{ node_js_version}} {{ distro }} main' state=present
-
-- name: Install nodejs and npm
-  apt: name=nodejs update_cache=yes state=installed
-
-- name: Install bower
-  npm: name=bower global=yes state=present
-
-- name: Install jspm
-  npm: name=jspm global=yes state=present
-
-- name: Run Django bower
-  django_manage:
-    command: bower_install
-    app_path: "{{ project_path }}"
-    virtualenv: "{{ virtualenv_path }}"
-    settings: "{{ django_settings_file }}"
-  environment: "{{ django_environment }}"
-
-- name: Run jspm
-  command: jspm install chdir={{ project_path }}
-
-- name: Run Django collectstatic
-  django_manage:
-    command: collectstatic
-    app_path: "{{ project_path }}"
-    virtualenv: "{{ virtualenv_path }}"
-    settings: "{{ django_settings_file }}"
-  environment: "{{ django_environment }}"
-  when: run_django_collectstatic
-  tags:
-    - django
-    - django_collectstatic
+- name: Change file permissions for app dir
+  file:
+    path: "{{ app_dir }}"
+    recurse: yes
+    owner: "{{ gunicorn_user }}"
+    group: "{{ gunicorn_group }}"
+    state: directory
