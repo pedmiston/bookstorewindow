@@ -121,4 +121,4 @@ STATIC_URL = "/static/"
 CRISPY_TEMPLATE_PACK = "bootstrap4"
 
 # Activate Django-Heroku
-django_heroku.settings(local())
+django_heroku.settings(locals())
