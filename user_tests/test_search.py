@@ -13,6 +13,10 @@ class UserSearchTest(StaticLiveServerTestCase):
         # Configure webdriver to wait for page reloads
         cls.browser.implicitly_wait(5)
 
+        staging_server = os.environ.get("STAGING_SERVER")
+        if staging_server:
+            cls.live_server_url = staging_server
+
     @classmethod
     def tearDownClass(cls):
         cls.browser.quit()
