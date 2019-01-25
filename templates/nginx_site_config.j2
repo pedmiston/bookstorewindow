@@ -1,8 +1,4 @@
 upstream wsgi_server {
-  # fail_timeout=0 means we always retry an upstream even if it failed
-  # to return a good HTTP response (in case the Unicorn master nukes a
-  # single worker for timing out).
-
   server unix:{{ venv_dir }}/run/gunicorn.sock fail_timeout=0;
 }
 
@@ -15,21 +11,14 @@ server {
 server {
     listen              443;
     server_name         {{ nginx_server_name }};
-    ssl on;
-    ssl_certificate     {{ ssl_dest_dir }}/{{ app_name }}.crt;
-    ssl_certificate_key {{ ssl_dest_dir }}/{{ app_name }}.key;
 
     client_max_body_size 4G;
 
     access_log {{ nginx_access_log_file }};
     error_log {{ nginx_error_log_file }};
 
-    location /static/ {
-        alias   {{ nginx_static_dir }};
-    }
-
     location / {
-        if (-f {{ virtualenv_path }}/maintenance_on.html) {
+        if (-f {{ venv_dir }}/maintenance_on.html) {
             return 503;
         }
 
@@ -46,14 +35,4 @@ server {
         }
     }
 
-    # Error pages
-    error_page 500 502 504 /500.html;
-    location = /500.html {
-        root {{ project_path }}/templates/;
-    }
-
-    error_page 503 /maintenance_on.html;
-    location = /maintenance_on.html {
-        root {{ virtualenv_path }}/;
-    }
 }

@@ -4,6 +4,17 @@
   vars_files:
     - vars/main.yml
     - vars/secrets.yml
+
+  handlers:
+    - name: restart application
+      supervisorctl: name={{ app_name }} state=restarted
+
+    - name: restart nginx
+      service: name=nginx state=restarted enabled=yes
+
+    - name: reload nginx
+      service: name=nginx state=reloaded
+
   tasks:
     - name: Update the system-wide packages
       apt:
@@ -14,7 +25,8 @@
       apt:
         name: python3-pip
 
-    - include_tasks: create_users_and_groups.yml
-    - include_tasks: setup_django_app.yml
-    - include_tasks: setup_supervisor.yml
-    - include_tasks: setup_nginx.yml
+    - include_tasks: tasks/create_users_and_groups.yml
+    - include_tasks: tasks/setup_django_app.yml
+    - include_tasks: tasks/setup_gunicorn.yml
+    - include_tasks: tasks/setup_supervisor.yml
+    - include_tasks: tasks/setup_nginx.yml
