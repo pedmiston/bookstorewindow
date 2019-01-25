@@ -1,6 +1,9 @@
 import os
+import logging
 
 from requests import Session
+
+logger = logging.getLogger(__name__)
 
 
 def search_volumes(query, session=None):
