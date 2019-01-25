@@ -4,6 +4,7 @@ NAME={{ app_name }}
 DJANGODIR={{ app_dir }}
 USER={{ gunicorn_user }}
 GROUP={{ gunicorn_group }}
+SOCKFILE={{ venv_dir }}/run/gunicorn.sock
 NUM_WORKERS={{ gunicorn_num_workers }}
 MAX_REQUESTS={{ gunicorn_max_requests }}
 
@@ -19,5 +20,5 @@ exec gunicorn \
     --max-requests $MAX_REQUESTS \
     --user $USER --group $GROUP \
     --log-level debug \
-    --bind 0.0.0.0:8000 \
+    --bind unix:$SOCKFILE \
     {{ app_name }}.wsgi

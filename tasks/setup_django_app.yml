@@ -1,8 +1,15 @@
 ---
 
+- name: Clone the app repo
+  git:
+    repo: https://github.com/pedmiston/bookstorewindow.git
+    dest: "{{ app_dir }}"
+    accept_hostkey: yes
+
 - name: Install packages required by the Django app inside virtualenv
   pip:
     virtualenv: "{{ venv_dir }}"
+    virtualenv_command: /usr/bin/python3 -m venv
     requirements: "{{ app_dir }}/requirements/base.txt"
 
 - name: Migrate the database

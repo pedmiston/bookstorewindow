@@ -23,7 +23,9 @@
 
     - name: Install the pip python package manager
       apt:
-        name: python3-pip
+        name:
+          - python3-pip
+          - python3-venv
 
     - include_tasks: tasks/create_users_and_groups.yml
     - include_tasks: tasks/setup_django_app.yml
