@@ -1,3 +1,0 @@
-ansible==2.7.6
-ansible-vault==1.2.0
-dopy==0.3.7a0

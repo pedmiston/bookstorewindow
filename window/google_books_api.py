@@ -23,7 +23,9 @@ def search_volumes(query, session=None):
         session = Session()
     response = session.get(query_url)
     if "items" not in response.json():
-        logger.error(f"No items in the response json, status code: {response.status_code}")
+        logger.error(
+            f"No items in the response json, status code: {response.status_code}"
+        )
         return []
     else:
         return response.json()["items"]

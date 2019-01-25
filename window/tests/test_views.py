@@ -1,5 +1,6 @@
 from unittest import mock
 from functools import partial
+from pathlib import Path
 
 from django.test import TestCase
 from django.utils.text import slugify
@@ -9,8 +10,13 @@ from betamax import Betamax
 
 from window import google_books_api
 
+
 with Betamax.configure() as config:
-    config.cassette_library_dir = "window/tests/fixtures/cassettes"
+    cassette_library_dir = "window/tests/fixtures/cassettes"
+    if not Path(cassette_library_dir).is_dir():
+        Path(cassette_library_dir).mkdir(parents=True)
+    config.cassette_library_dir = cassette_library_dir
+
 
 class ViewTest(TestCase):
     def setUp(self):

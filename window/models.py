@@ -71,11 +71,8 @@ class Book(models.Model):
         except KeyError:
             image = "https://books.google.com/googlebooks/images/no_cover_thumb.gif"
 
-        return cls(
-            title=title,
-            authors=authors,
-            image=image,
-        )
+        return cls(title=title, authors=authors, image=image)
+
 
 class Volume(models.Model):
     google_book_id = models.CharField(max_length=100, primary_key=True)
@@ -91,10 +88,8 @@ class Volume(models.Model):
         """
         google_book_id = volume["id"]
         volume_info = json.dumps(volume)
-        return cls(
-            google_book_id=google_book_id,
-            volume_info=volume_info,
-        )
+        return cls(google_book_id=google_book_id, volume_info=volume_info)
+
 
 class BookCreationError(Exception):
     pass

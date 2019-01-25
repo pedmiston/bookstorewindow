@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from django.test import TestCase
 from django.utils.text import slugify
 from betamax import Betamax
@@ -9,7 +11,10 @@ from window.models import Book, create_books_from_volume_data
 
 
 with Betamax.configure() as config:
-    config.cassette_library_dir = "window/tests/fixtures/cassettes"
+    cassette_library_dir = "window/tests/fixtures/cassettes"
+    if not Path(cassette_library_dir).is_dir():
+        Path(cassette_library_dir).mkdir(parents=True)
+    config.cassette_library_dir = cassette_library_dir
 
 
 class GoogleAPITest(TestCase):
@@ -49,4 +54,5 @@ class GoogleAPITest(TestCase):
         volume_data = google_books_api.search_volumes(query, session=self.session)
         books = create_books_from_volume_data(volume_data)
         best_result = books[0]
-        self.assertEquals(best_result.volumes.first().google_book_id, "FmyBAwAAQBAJ")
+        google_book_ids = [v.google_book_id for v in best_result.volumes.all()]
+        self.assertIn("FmyBAwAAQBAJ", google_book_ids)
