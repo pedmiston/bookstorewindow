@@ -1,6 +1,0 @@
--r base.txt
-pytest==4.1.1
-betamax==0.8.1
-selenium==3.141.0
-ipython==7.2.0
-black==18.9b0
