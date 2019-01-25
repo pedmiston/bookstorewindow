@@ -6,3 +6,4 @@
 geckodriver.log
 __pycache__/
 venv/
+staticfiles/

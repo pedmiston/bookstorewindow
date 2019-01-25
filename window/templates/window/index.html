@@ -1,25 +1,48 @@
 {% extends "base.html" %}
 
+{% load static %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static "window/css/style.css" %}">
+{% endblock head %}
+
 {% block content %}
+<h1>Bookstore Window</h1>
+
+
 {% load crispy_forms_tags %}
 {% crispy form %}
 
-{% if query %}
-<h1>{{ query }}</h1>
-{% endif %}
-
 {% if books %}
-<ul>
 {% for book in books %}
-<li>
-  <img src="{{ book.image }}" width="128" border="1">
-  {{ book.title }} by {{ book.authors }}
-  {% for volume in book.volumes.all %}
-  <a href="https://books.google.com/books?id={{ volume.google_book_id }}" class="google-book-page">Book page</a>
-  <a href="https://play.google.com/store/books/details?id={{ volume.google_book_id }}" class="google-store-page">Store page</a>
-  {% endfor %}
-</li>
+<div class="">
+  <div class="row my-lg-5">
+    <div class="col col-lg-2">
+      <img src="{{ book.image }}" width="128" border="1">
+    </div>
+    <div class="col">
+      <div class="row"><h3>{{ book.title }}</h3></div>
+      <div class="row">{{ book.authors }}</div>
+      {% if book.volumes.count == 1 %}
+      <div class="row">
+        <a href="https://books.google.com/books?id={{ volume.google_book_id }}" class="google-book-page">Book page</a>
+        &nbsp;
+        <a href="https://play.google.com/store/books/details?id={{ volume.google_book_id }}" class="google-store-page">Store page</a>
+      </div>
+      {% else %}
+      <div class="row">Editions:</div>
+      {% for volume in book.volumes.all %}
+      <div class="row">
+        <a href="https://books.google.com/books?id={{ volume.google_book_id }}" class="google-book-page">Book page</a>
+        &nbsp;
+        <a href="https://play.google.com/store/books/details?id={{ volume.google_book_id }}" class="google-store-page">Store page</a>
+      </div>
+      {% endfor %}
+      {% endif %}
+
+    </div>
+  </div>
+</div>
 {% endfor %}
-</ul>
 {% endif %}
 {% endblock content %}
