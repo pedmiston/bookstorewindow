@@ -25,7 +25,7 @@ class WindowView(View):
             return render(
                 request,
                 self.template_name,
-                {"form": form, "query": query, "books": books},
+                {"form": form, "books": books},
             )
 
         return render(request, self.template_name, {"form": form})
