@@ -47,6 +47,7 @@ class Book(models.Model):
     authors = models.CharField(max_length=100)
     image = models.URLField(blank=True)
     publisher = models.CharField(max_length=100, blank=True)
+    subtitle = models.CharField(max_length=100, blank=True)
 
     class Meta:
         unique_together = ("title", "authors")
@@ -69,11 +70,16 @@ class Book(models.Model):
             raise BookCreationError(err)
 
         try:
+            subtitle = volume["volumeInfo"]["subtitle"]
+        except KeyError as err:
+            subtitle = ""
+
+        try:
             image = volume["volumeInfo"]["imageLinks"]["thumbnail"]
         except KeyError:
             image = "https://books.google.com/googlebooks/images/no_cover_thumb.gif"
 
-        return cls(title=title, authors=authors, image=image, publisher=publisher)
+        return cls(title=title, authors=authors, image=image, publisher=publisher, subtitle=subtitle)
 
 
 class Volume(models.Model):

@@ -23,7 +23,13 @@
     </div>
 
     <div class="col">
-      <div class="row"><h4>{{ book.title }}</h4></div>
+      <div class="row">
+        <h4>{{ book.title }}{% if book.subtitle %}:
+
+        <small class="text-muted">{{ book.subtitle }}</small>
+        {% endif %}
+        </h4>
+      </div>
 
       <div class="row">{{ book.authors }}</div>
 
