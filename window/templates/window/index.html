@@ -16,14 +16,14 @@
 {% if books %}
 {% for book in books %}
 <div>
-  <div class="row my-lg-5 book">
+  <div class="row py-3 book">
 
-    <div class="col col-lg-2">
+    <div class="col col-md-2">
       <img src="{{ book.image }}" width="128">
     </div>
 
     <div class="col">
-      <div class="row"><h3>{{ book.title }}</h3></div>
+      <div class="row"><h4>{{ book.title }}</h4></div>
       <div class="row">{{ book.authors }}</div>
       {% include "window/more-info-snippet.html" with google_book_id=book.volumes.first.google_book_id %}
 
