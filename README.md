@@ -80,6 +80,7 @@ heroku create
 
 # Set the required virtual environment variables on the host machine.
 heroku config:set GOOGLE_API=XXXXXXXX
+heroku config:set SECRET_KEY=XXXXXXXX
 
 # Deploy the app by pushing to the git remote heroku
 git push heroku master:master
