@@ -13,6 +13,7 @@ class UserSearchTest(StaticLiveServerTestCase):
         # Configure webdriver to wait for page reloads
         cls.browser.implicitly_wait(5)
 
+        # Check if running against a staging server
         staging_server = os.environ.get("STAGING_SERVER")
         if staging_server:
             cls.live_server_url = staging_server
@@ -33,7 +34,7 @@ class UserSearchTest(StaticLiveServerTestCase):
         search.send_keys("The Bible")
         search.submit()
 
-        results = self.browser.find_elements_by_tag_name("li")
+        results = self.browser.find_elements_by_css_selector("div.book")
         self.assertTrue(len(results) > 0)
 
     def test_user_can_click_on_a_link_to_learn_more_about_the_book(self):
@@ -41,7 +42,7 @@ class UserSearchTest(StaticLiveServerTestCase):
         search.send_keys("Sapiens: A Brief History of Humankind")
         search.submit()
 
-        result = self.browser.find_elements_by_tag_name("li")[0]
+        result = self.browser.find_elements_by_css_selector("div.book")[0]
         link = result.find_elements_by_class_name("google-book-page")[0]
         self.assertIn(
             "books.google.com/books?id=FmyBAwAAQBAJ", link.get_attribute("href")

@@ -7,42 +7,37 @@
 {% endblock head %}
 
 {% block content %}
-<h1>Bookstore Window</h1>
-
+<h1 class="display-4">Bookstore Window</h1>
+<p class="lead">Search for a book, any book.</p>
 
 {% load crispy_forms_tags %}
 {% crispy form %}
 
 {% if books %}
 {% for book in books %}
-<div class="">
-  <div class="row my-lg-5">
+<div>
+  <div class="row my-lg-5 book">
+
     <div class="col col-lg-2">
-      <img src="{{ book.image }}" width="128" border="1">
+      <img src="{{ book.image }}" width="128">
     </div>
+
     <div class="col">
       <div class="row"><h3>{{ book.title }}</h3></div>
       <div class="row">{{ book.authors }}</div>
-      {% if book.volumes.count == 1 %}
-      <div class="row">
-        <a href="https://books.google.com/books?id={{ volume.google_book_id }}" class="google-book-page">Book page</a>
-        &nbsp;
-        <a href="https://play.google.com/store/books/details?id={{ volume.google_book_id }}" class="google-store-page">Store page</a>
-      </div>
-      {% else %}
-      <div class="row">Editions:</div>
-      {% for volume in book.volumes.all %}
-      <div class="row">
-        <a href="https://books.google.com/books?id={{ volume.google_book_id }}" class="google-book-page">Book page</a>
-        &nbsp;
-        <a href="https://play.google.com/store/books/details?id={{ volume.google_book_id }}" class="google-store-page">Store page</a>
-      </div>
-      {% endfor %}
-      {% endif %}
+      {% include "window/more-info-snippet.html" with google_book_id=book.volumes.first.google_book_id %}
 
+      {% if book.volumes.count > 1 %}
+      {% include "window/other-editions-snippet.html" with volumes=book.volumes.all %}
+      {% endif %}
     </div>
   </div>
 </div>
 {% endfor %}
 {% endif %}
 {% endblock content %}
+
+
+{% block javascript %}
+<script src="{% static "window/js/main.js" %}"></script>
+{% endblock javascript %}

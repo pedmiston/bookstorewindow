@@ -1,0 +1,14 @@
+<div class="row">
+Other editions:
+</div>
+
+{% for volume in volumes %}
+{% if forloop.counter0 > 0 %}
+<div class="row my-1">
+  <div class="btn-group">
+  <a href="https://books.google.com/books?id={{ volume.google_book_id }}" class="btn btn-outline-secondary btn-sm" role="button" target="_blank">Google Book Page</a>
+  <a href="https://play.google.com/store/books/details?id={{ volume.google_book_id }}" role="button" class="btn btn-outline-secondary btn-sm" target="_blank">Store</a>
+  </div>
+</div>
+{% endif %}
+{% endfor %}
