@@ -6,7 +6,6 @@ import jinja2
 template = jinja2.Template(
     """\
 GOOGLE_API_KEY={{ google_api_key }}
-DISABLE_COLLECTSTATIC=1
 DEBUG=1
 """
 )
