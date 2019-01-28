@@ -46,6 +46,7 @@ class Book(models.Model):
     title = models.CharField(max_length=100)
     authors = models.CharField(max_length=100)
     image = models.URLField(blank=True)
+    publisher = models.CharField(max_length=100, blank=True)
 
     class Meta:
         unique_together = ("title", "authors")
@@ -63,6 +64,7 @@ class Book(models.Model):
         try:
             title = volume["volumeInfo"]["title"]
             authors = " & ".join(volume["volumeInfo"]["authors"])
+            publisher = volume["volumeInfo"]["publisher"]
         except KeyError as err:
             raise BookCreationError(err)
 
@@ -71,13 +73,16 @@ class Book(models.Model):
         except KeyError:
             image = "https://books.google.com/googlebooks/images/no_cover_thumb.gif"
 
-        return cls(title=title, authors=authors, image=image)
+        return cls(title=title, authors=authors, image=image, publisher=publisher)
 
 
 class Volume(models.Model):
     google_book_id = models.CharField(max_length=100, primary_key=True)
     volume_info = models.TextField()
     book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name="volumes")
+
+    class Meta:
+        ordering = ["google_book_id"]
 
     @classmethod
     def from_volume_data(cls, volume):

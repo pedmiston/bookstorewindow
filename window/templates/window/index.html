@@ -24,7 +24,11 @@
 
     <div class="col">
       <div class="row"><h4>{{ book.title }}</h4></div>
+
       <div class="row">{{ book.authors }}</div>
+
+      <div class="publisher row font-weight-light py-1">{{ book.publisher }}</div>
+
       {% include "window/more-info-snippet.html" with google_book_id=book.volumes.first.google_book_id %}
 
       {% if book.volumes.count > 1 %}

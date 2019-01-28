@@ -37,7 +37,16 @@ class UserSearchTest(StaticLiveServerTestCase):
         results = self.browser.find_elements_by_css_selector("div.book")
         self.assertTrue(len(results) > 0)
 
-    def test_user_clicks_on_a_link_to_learn_more_about_the_book(self):
+    def test_user_sees_publisher_of_a_book(self):
+        search = self.browser.find_element_by_id("id_query")
+        search.send_keys("Statistical Rethinking")
+        search.submit()
+
+        first_result = self.browser.find_element_by_css_selector("div.book")
+        publisher = first_result.find_element_by_css_selector("div.publisher").text
+        self.assertEquals(publisher, "CRC Press")
+
+    def test_user_learns_more_about_the_book(self):
         search = self.browser.find_element_by_id("id_query")
         search.send_keys("Sapiens: A Brief History of Humankind")
         search.submit()
@@ -45,7 +54,7 @@ class UserSearchTest(StaticLiveServerTestCase):
         result = self.browser.find_elements_by_css_selector("div.book")[0]
         link = result.find_elements_by_class_name("google-book-page")[0]
         self.assertIn(
-            "books.google.com/books?id=FmyBAwAAQBAJ", link.get_attribute("href")
+            "books.google.com/books?id=", link.get_attribute("href")
         )
 
     def test_user_searches_for_a_book_that_doesnt_exist(self):
