@@ -26,12 +26,7 @@ def create_books_from_volume_data(volume_data):
             logger.error(err)
             continue
 
-        try:
-            book.full_clean()
-        except ValidationError as err:
-            book = Book.objects.get(title=book.title, authors=book.authors)
-        else:
-            book.save()
+        book, _ = Book.objects.get_or_create(title=book.title, authors=book.authors)
 
         volume = Volume.from_volume_data(volume)
         book.volumes.add(volume, bulk=False)
