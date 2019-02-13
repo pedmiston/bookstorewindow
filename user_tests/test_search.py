@@ -8,7 +8,9 @@ class UserSearchTest(StaticLiveServerTestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.browser = webdriver.Firefox()
+        options = webdriver.ChromeOptions()
+        options.add_argument('headless')
+        cls.browser = webdriver.Chrome(chrome_options=options)
 
         # Configure webdriver to wait for page reloads
         cls.browser.implicitly_wait(5)

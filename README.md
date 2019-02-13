@@ -12,6 +12,9 @@ manager.
 # Install required programs
 brew install pyenv pipenv heroku/brew/heroku postgres
 
+# Install the required web drivers for user tests
+brew install chromedriver
+
 # Authenticate with the heroku client
 heroku login
 
