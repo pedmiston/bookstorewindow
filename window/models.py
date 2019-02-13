@@ -18,9 +18,15 @@ def create_books_from_volume_data(volume_data):
         except BookCreationError as err:
             logger.error(err)
             continue
+
+        try:
+            book.full_clean()
+        except ValidationError:
+            book = Book.objects.get(google_book_id=book.google_book_id)
         else:
             book.save()
-            books.append(book)
+
+        books.append(book)
 
     return books
 
@@ -31,7 +37,7 @@ class Book(models.Model):
     authors = models.CharField(max_length=100)
     image = models.URLField()
     publisher = models.CharField(max_length=100)
-    subtitle = models.CharField(max_length=100)
+    subtitle = models.CharField(max_length=200, blank=True)
 
     @classmethod
     def from_volume_data(cls, volume):
