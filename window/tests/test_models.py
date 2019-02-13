@@ -10,7 +10,14 @@ class ModelTest(TestCase):
         with self.assertRaises(ValidationError):
             book.full_clean()
 
-        book = Book(title="The Bible", authors="Paul", publisher="Oxford")
+        book = Book(
+            google_book_id="1",
+            title="The Bible",
+            authors="Paul",
+            publisher="Oxford",
+            image="http://internet.com/bible.png",
+            subtitle="Version 1"
+        )
         book.full_clean()  # does not raise
 
     def test_cant_make_two_books_with_same_title_and_authors(self):

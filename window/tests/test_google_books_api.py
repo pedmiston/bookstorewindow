@@ -53,6 +53,4 @@ class GoogleAPITest(TestCase):
         self.vcr.use_cassette(slugify(query))
         volume_data = google_books_api.search_volumes(query, session=self.session)
         books = create_books_from_volume_data(volume_data)
-        best_result = books[0]
-        google_book_ids = [v.google_book_id for v in best_result.volumes.all()]
-        self.assertIn("FmyBAwAAQBAJ", google_book_ids)
+        self.assertEquals(books[0].google_book_id, "FmyBAwAAQBAJ")

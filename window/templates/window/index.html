@@ -33,11 +33,8 @@
 
       <div class="publisher row font-weight-light py-1">{{ book.publisher }}</div>
 
-      {% include "window/more-info-snippet.html" with google_book_id=book.volumes.first.google_book_id %}
+      {% include "window/more-info-snippet.html" with google_book_id=book.google_book_id %}
 
-      {% if book.volumes.count > 1 %}
-      {% include "window/other-editions-snippet.html" with volumes=book.volumes.all %}
-      {% endif %}
     </div>
   </div>
 </div>
