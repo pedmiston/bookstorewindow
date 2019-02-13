@@ -19,10 +19,3 @@ class ModelTest(TestCase):
             subtitle="Version 1"
         )
         book.full_clean()  # does not raise
-
-    def test_cant_make_two_books_with_same_title_and_authors(self):
-        book1 = Book(title="Hello, World", authors="Pierce")
-        book1.save()
-        book2 = Book(title="Hello, World", authors="Pierce")
-        with self.assertRaises(ValidationError):
-            book2.full_clean()

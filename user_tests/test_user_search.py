@@ -29,7 +29,8 @@ class UserSearchTest(StaticLiveServerTestCase):
         self.browser.get(self.live_server_url)
 
     def test_window_has_search_input(self):
-        self.browser.find_element_by_id("id_query")
+        search_input = self.browser.find_element_by_id("id_query")
+        self.assertEqual(search_input.tag_name, "input")
 
     def test_user_searches_for_a_book(self):
         search = self.browser.find_element_by_id("id_query")

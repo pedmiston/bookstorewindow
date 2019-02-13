@@ -44,11 +44,11 @@ class GoogleAPITest(TestCase):
         self.vcr.use_cassette(slugify(query))
         volume_data = google_books_api.search_volumes(query, session=self.session)
         books = create_books_from_volume_data(volume_data)
+        self.assertGreater(len(books), 0)
         for book in books:
-            if book.title == query:
-                self.assertEqual(book.authors, "Yuval Noah Harari")
+            self.assertNotEqual(book.authors, "")
 
-    def test_books_have_volumes(self):
+    def test_books_have_expected_google_book_ids(self):
         query = "Sapiens: A Brief History of Humankind"
         self.vcr.use_cassette(slugify(query))
         volume_data = google_books_api.search_volumes(query, session=self.session)
