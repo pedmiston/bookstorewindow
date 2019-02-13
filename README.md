@@ -107,9 +107,10 @@ echo $DEBUG
 ./manage.py collectstatic
 
 # Run tests
-./manage.py test             # run all tests
-./manage.py test user_tests  # run user tests only
-./manage.py test window      # run unit tests for main app only
+./manage.py test               # run all tests
+./manage.py test user_tests    # run user tests only
+./manage.py test window        # run unit tests for main app only
+./manage.py test google_books  # run tests for connecting to google books
 ```
 
 To run the user tests against a staging server:

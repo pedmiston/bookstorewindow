@@ -3,7 +3,8 @@ from django.views import View
 
 from .forms import SearchForm
 from .models import Book, create_books_from_volume_data
-from .google_books_api import search_volumes
+
+from google_books.api import search_volumes
 
 
 class WindowView(View):

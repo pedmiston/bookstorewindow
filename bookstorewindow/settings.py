@@ -21,6 +21,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "window",
+    "google_books",
     "crispy_forms",
 ]
 

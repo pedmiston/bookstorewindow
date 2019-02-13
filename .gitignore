@@ -1,9 +1,5 @@
 .env
-**/fixtures/cassettes/
-.vagrant/
-*.retry
+**/fixtures/
 *.sqlite3
-geckodriver.log
 __pycache__/
-venv/
 staticfiles/
