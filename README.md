@@ -8,30 +8,60 @@ Here are the steps to take to work on this project. These
 steps were developed on a macOS with `homebrew` as a program
 manager.
 
-```bash
-# Install required programs
-brew install pyenv pipenv heroku/brew/heroku postgres
+### Python virtual environment
 
+```bash
+# Install pyenv and pipenv
+brew install pyenv pipenv
+
+# Activate pyenv to pin specific versions of python.
+eval "$(pyenv init -)"
+
+# Install the version of python.
+pyenv install 3.7.1
+
+# Use the version of python in this project.
+pyenv local 3.7.1
+
+# Create a virtual environment for the project.
+# The packages and required version of python are listed in the Pipfile.
+pipenv install --python 3.7.1 --dev
+```
+
+### User tests
+
+The user tests use Selenium and a Chrome headless web driver.
+
+```bash
 # Install the required web drivers for user tests
-brew install chromedriver
+brew cask install chromedriver
+```
+
+### Heroku
+
+```bash
+# Install the heroku command line tool
+brew install heroku/brew/heroku
 
 # Authenticate with the heroku client
 heroku login
 
-# Activate pyenv to pin specific versions of python
-eval "$(pyenv init -)"
-
-# Create a virtual environment for the project.
-# The packages and required version of python are listed in the Pipfile.
-pipenv install --dev
+# List any running apps
+heroku apps
 ```
 
 ## Configuring the local environment
 
-The following command runs the setup-env.py script in the project's
-virtualenv. The setup-env.py script will prompt the user for the required
-environment variables and write them as KEY=VALUE to a ".env" file.
-**The .env file is loaded by `pipenv` and `heroku`.**
+Running the app locally requires the following environment variables:
+
+* GOOGLE_API_KEY
+* DEBUG
+
+Run the "bin/setup-env.py" script in the project's virtualenv to create a
+".env" file containing the required environment variables. The script will
+prompt the user for the required environment variables and write them as
+KEY=VALUE to an ".env" file. **The .env file is loaded by `pipenv` and
+`heroku`.**
 
 ```bash
 pipenv run bin/setup-env.py
@@ -42,6 +72,10 @@ pipenv run bin/setup-env.py
 ```bash
 # Activate the virtual environment, reading environment variables from the ".env" file.
 pipenv shell
+
+# Collect static files and apply DB migrations
+./manage.py collectstatic
+./manage.py migrate
 
 # Run the app on the django development server
 ./manage.py runserver
@@ -56,11 +90,24 @@ heroku local
 
 ## Testing
 
-Run all of the tests, including user tests, which use a selenium
-web driver to simulate user behavior.
+The full test suite includes user tests, which use a Selenium
+web driver to simulate user behavior, as well as unit tests.
+
+**Note:** The full test suite requires a valid Google API Key. Requests are
+made once and stored in plaintext using `betamax`. After running the tests once,
+on subsequent runs, the cached responses are used instead. Although in theory
+the cached responses could be committed to the repo as fixtures, the Google
+API Key is included in the cached response, and therefore is not committed to
+this repo, since it is public.
 
 ```
-./manage.py test
+# Prerequisites
+echo $GOOGLE_API_KEY
+echo $DEBUG
+./manage.py collectstatic
+
+# Run tests
+./manage.py test             # run all tests
 ./manage.py test user_tests  # run user tests only
 ./manage.py test window      # run unit tests for main app only
 ```
@@ -79,7 +126,10 @@ STAGING_SERVER=http://0.0.0.0:5000 pipenv run ./manage.py test user_tests
 
 ```bash
 # Creates a heroku machine and points a git remote to it
-heroku create
+heroku apps:create
+
+# If a Heroku app has already been created, set a git remote to point to it
+heroku git:remote -a APPNAME
 
 # Set the required virtual environment variables on the host machine.
 heroku config:set GOOGLE_API=XXXXXXXX
@@ -95,8 +145,9 @@ heroku run python manage.py migrate
 ## Accessing the Postgres database
 
 ```bash
-heroku pg:info
-heroku pg:psql
+heroku pg:info  # view db info
+heroku pg:psql  # jump into a db session
+heroku pg:reset # reset the db
 ```
 
 ## Using the Google Books API
