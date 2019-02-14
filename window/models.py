@@ -21,17 +21,19 @@ def create_books_from_volume_data(volume_data):
         except Book.DoesNotExist:
             pass
         else:
+            # The book was retrieved from the DB
             books.append(book)
             continue
 
-        # Try to create a book from the volume data
+        # Then try to create a book from the volume data
         try:
             book = Book.from_volume_data(volume)
-        except BookCreationError as err:
+            book.full_clean()
+        except (BookCreationError, ValidationError) as err:
+            # Couldn't make a book
             logger.error(err)
             continue
         else:
-            book.full_clean()
             book.save()
             books.append(book)
     return books
@@ -44,6 +46,7 @@ class Book(models.Model):
     image = models.URLField()
     publisher = models.CharField(max_length=100)
     subtitle = models.CharField(max_length=200, blank=True)
+    description = models.TextField(blank=True)
 
     @classmethod
     def from_volume_data(cls, volume):
@@ -76,6 +79,11 @@ class Book(models.Model):
         if not image:
             image = NO_COVER_THUMB
 
+        try:
+            description = volume["volumeInfo"]["description"]
+        except KeyError:
+            description = ""
+
         return cls(
             google_book_id=google_book_id,
             title=title,
@@ -83,6 +91,7 @@ class Book(models.Model):
             image=image,
             publisher=publisher,
             subtitle=subtitle,
+            description=description,
         )
 
 
