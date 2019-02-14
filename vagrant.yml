@@ -1,0 +1,47 @@
+---
+- hosts: all
+  become: yes
+  become_user: vagrant
+  vars:
+    app_dir: /app
+  tasks:
+    - name: Upgrade system-wide packages
+      apt:
+        update_cache: yes
+        upgrade: yes
+      become_user: root
+
+    - name: Install system-wide packages
+      apt:
+        name:
+          - python3-pip
+          - chromium-chromedriver
+      become_user: root
+
+
+    - name: Install global python packages
+      pip:
+        name: pipenv
+        executable: pip3
+      become_user: root
+
+    - name: Install app packages
+      command: pipenv install --dev
+      args:
+        chdir: "{{ app_dir }}"
+
+    - name: Record location of virtualenv
+      command: pipenv --venv
+      args:
+        chdir: "{{ app_dir }}"
+      register: venv
+
+    - name: Run the django tests
+      django_manage:
+        command: test
+        app_path: "{{ app_dir }}"
+        virtualenv: "{{ venv.stdout }}"
+      environment:
+        GOOGLE_API_KEY: "{{ lookup('env', 'GOOGLE_API_KEY') }}"
+        DEBUG: 1
+        CHROMEDRIVER: /usr/lib/chromium-browser/chromedriver

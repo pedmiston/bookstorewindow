@@ -8,7 +8,7 @@ Here are the steps to take to work on this project. These
 steps were developed on a macOS with `homebrew` as a program
 manager.
 
-### Python virtual environment
+### Python environment
 
 ```bash
 # Install pyenv and pipenv
@@ -86,6 +86,14 @@ pipenv shell
 ```bash
 # Run the app as a virtual heroku app, reading environment variables from the ".env" file.
 heroku local
+```
+
+## Run the app on a Vagrant VM
+
+```bash
+# Requires: virtualbox, vagrant
+vagrant box add geerlingguy/ubuntu1804
+vagrant up
 ```
 
 ## Testing
