@@ -20,7 +20,9 @@ def search_volumes(query, session=None):
     """
     api_key = os.getenv("GOOGLE_API_KEY", None)
     if not api_key:
-        raise MissingAPIKeyError("The environment variable 'GOOGLE_API_KEY' was not set.")
+        raise MissingAPIKeyError(
+            "The environment variable 'GOOGLE_API_KEY' was not set."
+        )
 
     base_url = "https://www.googleapis.com/books/v1/volumes"
 
@@ -35,6 +37,7 @@ def search_volumes(query, session=None):
         return []
     else:
         return response.json()["items"]
+
 
 class MissingAPIKeyError(Exception):
     pass

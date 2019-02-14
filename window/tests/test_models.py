@@ -3,7 +3,12 @@ from django.core.exceptions import ValidationError
 
 from model_mommy import mommy
 
-from window.models import Book, create_books_from_volume_data, BookCreationError, NO_COVER_THUMB
+from window.models import (
+    Book,
+    create_books_from_volume_data,
+    BookCreationError,
+    NO_COVER_THUMB,
+)
 
 
 class ModelTest(TestCase):
@@ -18,7 +23,7 @@ class ModelTest(TestCase):
             authors="Paul",
             publisher="Oxford",
             image="http://internet.com/bible.png",
-            subtitle="Version 1"
+            subtitle="Version 1",
         )
         book.full_clean()  # does not raise
 
@@ -43,7 +48,7 @@ class ModelTest(TestCase):
                 "title": "A Title",
                 "authors": ["Me", "Myself"],
                 "publisher": "New York",
-            }
+            },
         }
         book = Book.from_volume_data(volume)
         self.assertEquals(book.image, NO_COVER_THUMB)

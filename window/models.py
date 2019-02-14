@@ -76,7 +76,14 @@ class Book(models.Model):
         if not image:
             image = NO_COVER_THUMB
 
-        return cls(google_book_id=google_book_id, title=title, authors=authors, image=image, publisher=publisher, subtitle=subtitle)
+        return cls(
+            google_book_id=google_book_id,
+            title=title,
+            authors=authors,
+            image=image,
+            publisher=publisher,
+            subtitle=subtitle,
+        )
 
 
 class BookCreationError(Exception):

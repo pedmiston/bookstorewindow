@@ -9,7 +9,7 @@ class UserSearchTest(StaticLiveServerTestCase):
     def setUpClass(cls):
         super().setUpClass()
         options = webdriver.ChromeOptions()
-        options.add_argument('headless')
+        options.add_argument("headless")
         cls.browser = webdriver.Chrome(chrome_options=options)
 
         # Configure webdriver to wait for page reloads
@@ -56,9 +56,7 @@ class UserSearchTest(StaticLiveServerTestCase):
 
         result = self.browser.find_elements_by_css_selector("div.book")[0]
         link = result.find_elements_by_class_name("google-book-page")[0]
-        self.assertIn(
-            "books.google.com/books?id=", link.get_attribute("href")
-        )
+        self.assertIn("books.google.com/books?id=", link.get_attribute("href"))
 
     def test_user_searches_for_a_book_that_doesnt_exist(self):
         search = self.browser.find_element_by_id("id_query")

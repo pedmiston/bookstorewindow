@@ -27,9 +27,7 @@ class ViewTest(TestCase):
         self.vcr = Betamax(self.session)
         self.vcr.start()
 
-        self.search_volumes = partial(
-            api.search_volumes, session=self.session
-        )
+        self.search_volumes = partial(api.search_volumes, session=self.session)
 
     def tearDown(self):
         self.vcr.stop()

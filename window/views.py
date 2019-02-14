@@ -23,10 +23,6 @@ class WindowView(View):
             books = create_books_from_volume_data(volume_data)
             if len(books) == 0:
                 form.add_error("query", "No books by that name were found!")
-            return render(
-                request,
-                self.template_name,
-                {"form": form, "books": books},
-            )
+            return render(request, self.template_name, {"form": form, "books": books})
 
         return render(request, self.template_name, {"form": form})
