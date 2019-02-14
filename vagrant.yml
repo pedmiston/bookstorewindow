@@ -18,7 +18,6 @@
           - chromium-chromedriver
       become_user: root
 
-
     - name: Install global python packages
       pip:
         name: pipenv
