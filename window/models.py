@@ -8,25 +8,32 @@ from django.core.exceptions import ValidationError
 logger = logging.getLogger(__name__)
 
 
+NO_COVER_THUMB = "https://books.google.com/googlebooks/images/no_cover_thumb.gif"
+
+
 def create_books_from_volume_data(volume_data):
     """Create Book instances from a query to the Google Books API."""
     books = []
     for volume in volume_data:
+        # First try to get the book from the DB if it exists
+        try:
+            book = Book.objects.get(google_book_id=volume["id"])
+        except Book.DoesNotExist:
+            pass
+        else:
+            books.append(book)
+            continue
+
+        # Try to create a book from the volume data
         try:
             book = Book.from_volume_data(volume)
         except BookCreationError as err:
             logger.error(err)
             continue
-
-        try:
-            book.full_clean()
-        except ValidationError:
-            book = Book.objects.get(google_book_id=book.google_book_id)
         else:
+            book.full_clean()
             book.save()
-
-        books.append(book)
-
+            books.append(book)
     return books
 
 
@@ -64,7 +71,10 @@ class Book(models.Model):
         try:
             image = volume["volumeInfo"]["imageLinks"]["thumbnail"]
         except KeyError:
-            image = "https://books.google.com/googlebooks/images/no_cover_thumb.gif"
+            image = NO_COVER_THUMB
+
+        if not image:
+            image = NO_COVER_THUMB
 
         return cls(google_book_id=google_book_id, title=title, authors=authors, image=image, publisher=publisher, subtitle=subtitle)
 
