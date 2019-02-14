@@ -4,11 +4,8 @@ import django_heroku
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 DEBUG = os.environ.get("DEBUG", False)
+SECRET_KEY = os.environ.get("SECRET_KEY", "not-a-secret")
 
-if DEBUG:
-    SECRET_KEY = "not-a-secret"
-else:
-    SECRET_KEY = os.environ.get("SECRET_KEY")
 
 ALLOWED_HOSTS = []
 
