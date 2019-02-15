@@ -15,8 +15,8 @@
 
 {% if books %}
 {% for book in books %}
-<div>
-  <div class="row py-3 book">
+<div class="book">
+  <div class="row py-3">
 
     <div class="col col-md-2 mr-n5 mr-sm-0">
       <img src="{{ book.image }}" width="128">
@@ -40,7 +40,7 @@
       <div class="publisher row font-weight-light py-1">{{ book.publisher }}</div>
 
       <div class="row my-1">
-        <a class="btn btn-light" data-toggle="collapse" role="button" href="#collapse{{ book.google_book_id }}">
+        <a class="description btn btn-light" data-toggle="collapse" role="button" href="#collapse{{ book.google_book_id }}">
           Description
         </a>
       </div>
