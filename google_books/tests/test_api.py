@@ -34,11 +34,15 @@ class GoogleAPITest(TestCase):
             with self.assertRaises(api.MissingAPIKeyError):
                 api.search_volumes("The Bible")
 
-    def test_searching_for_a_book_returns_a_list_of_dicts(self):
+    def test_searching_for_a_book_returns_a_list_of_dicts_with_google_book_ids(self):
         query = "The Bible"
         self.vcr.use_cassette(slugify(query))
         results = api.search_volumes(query, session=self.session)
         self.assertTrue(len(results) > 0)
+        for book in results:
+            self.assertIn("id", book)
+            self.assertNotEqual(book["id"], "")
+
 
     def test_create_book_instances_from_book_data(self):
         query = "The Bible"
@@ -56,7 +60,7 @@ class GoogleAPITest(TestCase):
         for book in books:
             self.assertNotEqual(book.authors, "")
 
-    def test_books_have_expected_google_book_ids(self):
+    def test_a_book_has_the_expected_google_book_id(self):
         query = "Sapiens: A Brief History of Humankind"
         self.vcr.use_cassette(slugify(query))
         volume_data = api.search_volumes(query, session=self.session)
