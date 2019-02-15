@@ -30,7 +30,7 @@ class ViewTest(TestCase):
 
     @mock.patch("window.views.search_volumes")
     @mock.patch("window.views.create_books_from_volume_data")
-    def test_a_query_that_doesnt_have_any_books_comes_back_with_errors(
+    def test_a_query_that_doesnt_return_any_books_comes_back_with_errors(
         self, create_books_from_volume_data, search_volumes
     ):
         create_books_from_volume_data.return_value = []
