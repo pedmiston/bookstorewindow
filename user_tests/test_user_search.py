@@ -2,6 +2,9 @@ import os
 
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 
 class UserSearchTest(StaticLiveServerTestCase):
@@ -10,7 +13,11 @@ class UserSearchTest(StaticLiveServerTestCase):
         super().setUpClass()
         options = webdriver.ChromeOptions()
         options.add_argument("headless")
+
+        # Get the path to the chromedriver if it is provided in the environment.
+        # Otherwise, chromedriver is expected on the user's PATH.
         chromedriver = os.environ.get("CHROMEDRIVER", "chromedriver")
+
         cls.browser = webdriver.Chrome(chromedriver, chrome_options=options)
 
         # Configure webdriver to wait for page reloads
@@ -56,7 +63,17 @@ class UserSearchTest(StaticLiveServerTestCase):
         search.submit()
 
         result = self.browser.find_elements_by_css_selector("div.book")[0]
-        link = result.find_elements_by_class_name("google-book-page")[0]
+
+        # User clicks the "Description" button
+        link = result.find_element_by_class_name("google-book-page")
+        self.assertFalse(link.is_displayed())
+        result.find_element_by_css_selector("a.description").click()
+        WebDriverWait(self.browser, 2).until(
+            EC.visibility_of(link)
+        )
+        self.assertTrue(link.is_displayed())
+
+        link = result.find_element_by_class_name("google-book-page")
         self.assertIn("books.google.com/books?id=", link.get_attribute("href"))
 
     def test_user_searches_for_a_book_that_doesnt_exist(self):

@@ -8,7 +8,7 @@
 {% endblock head %}
 
 {% block content %}
-<h1 class="display-4">Bookstore Window</h1>
+<h1 class="display-4">Bookstore</h1>
 <p class="lead">Search for a book, any book.</p>
 
 {% load crispy_forms_tags %}
@@ -16,8 +16,8 @@
 
 {% if books %}
 {% for book in books %}
-<div>
-  <div class="row py-3 book">
+<div class="book">
+  <div class="row py-3">
 
     <div class="col col-md-2 mr-n5 mr-sm-0">
       <img src="{{ book.image }}" width="128">
@@ -40,9 +40,20 @@
 
       <div class="publisher row font-weight-light py-1">{{ book.publisher }}</div>
 
-      {% include "window/more-info-snippet.html" with book=book %}
+      <div class="row my-1">
+        <a class="description btn btn-light" data-toggle="collapse" role="button" href="#collapse{{ book.google_book_id }}">
+          Description
+        </a>
+      </div>
 
     </div>
+  </div>
+
+  <div class="row collapse" id="collapse{{ book.google_book_id }}">
+    <p class="py-1">{{ book.description|safe }}</p>
+    <a class="google-book-page" href="https://books.google.com/books?id={{ book.google_book_id }}" target="_blank">
+      Data Source
+    </a>
   </div>
 </div>
 {% endfor %}
