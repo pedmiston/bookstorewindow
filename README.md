@@ -57,7 +57,7 @@ brew cask install chromedriver
 sudo apt install chromium-chromedriver
 ```
 
-**Note:** When the `chromedriver` is installed on Ubuntu, it is not
+When the `chromedriver` is installed on Ubuntu, it is not
 on the user's path by default, in which case a full path to the executable
 is needed when initializing web drivers for tests. The path to the `chromedriver`
 may be something like "/usr/lib/chromium-browser/chromedriver".
@@ -76,7 +76,7 @@ made once and cached using `betamax`.
 ./manage.py test               # run all tests
 ```
 
-**Note:** Although the cached responses could be committed to the repo as
+Although the cached responses could be committed to the repo as
 fixtures so that the tests were reproducible without a Google API Key, the
 Google API Key is stored in the cached responses. Since this is a public
 project and the Google API Key is private, the fixtures are not committed to
